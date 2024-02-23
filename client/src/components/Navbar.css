@@ -1,0 +1,7 @@
+.active {
+    background-color: #1b84ff;
+}
+
+.navbar{
+    height: calc(100vh - 74px);
+}
