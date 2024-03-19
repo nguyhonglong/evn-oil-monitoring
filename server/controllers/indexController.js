@@ -1,4 +1,4 @@
-import Index from "../models/IndexModel";
+import Index from "../models/IndexModel.js";
 
 export const getAllIndex = async (req, res, next) => {
     try {
