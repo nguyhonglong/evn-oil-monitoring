@@ -4,6 +4,6 @@ import { getAllSubstations } from '../controllers/substationController.js';
 
 
 const Router = express.Router();
-Router.route('/').get( getAllSubstations)
+Router.route('/').get( verifyToken, getAllSubstations)
 
 export default Router;

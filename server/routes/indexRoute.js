@@ -7,3 +7,4 @@ const Router = express.Router();
 Router.route('/').get(verifyToken,getAllIndex)
 
 export default Router;
+
