@@ -1,50 +1,34 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import {Index} from './model/indexModel.js';
-import cors from 'cors';
+import 'dotenv/config'
+import connectDB from './configs/db.js';
+import  express  from "express";
+import cors from "cors";
+import auth from "./routes/authRoute.js";
+import index from "./routes/indexRoute.js";
+import transformer from "./routes/transformerRoute.js";
+import substation from "./routes/substationRoute.js";
+import errorHandler from './middlewares/errorHandler.js';
 
-
-const mongoDBURL = "mongodb+srv://nguyhonglong2002:VoCm3fdhVCDf9vwK@cluster0.zokt7pa.mongodb.net/test?retryWrites=true&w=majority"
+connectDB();
 
 const app = express();
 
-
 app.use(cors());
 app.use(express.json());
-app.get('/api/station', async (req, res) => {
-  try {
-    const indexData = await Index.find();
 
-    if (indexData.length > 0) {
-      res.status(200).json(indexData);
-    } else {
-      res.status(404).json({ message: 'Không tìm thấy dữ liệu.' });
-    }
-  } catch (error) {
-    res.status(500).json({ message: 'Lỗi server.' });
-  }
-});
+app.use('/api/v1/auth', auth)
+app.use('/api/v1/index', index)
+app.use('/api/v1/transformers', transformer)
+app.use('/api/v1/substations', substation)
 
+app.all('*', (req,res,next) => {
+    const err = new Error('The route cannot be found')
+    err.statusCode = 404;
+    next(err);
+})
 
+app.use(errorHandler);
 
-app.post('/api/index', async (req, res) => {
-  try {
-    const records = req.body;
-    const insertedRecords = await Index.insertMany(records);
-    return res.status(200).json(insertedRecords);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send('Internal Server Error');
-  }
-});
-
-app.listen(3001);
-
-mongoose
-    .connect(mongoDBURL)
-    .then(() => {
-        console.log("connect to db success")
-    })
-    .catch((error) => {
-        console.log(error)
-    });
+const port = process.env.APP_PORT;
+app.listen(port,()=>{
+    console.log(`server listening on ${port}`);
+})
