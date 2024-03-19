@@ -1,4 +1,4 @@
-import {Substation} from '../models/SubstationModel.js'
+import {Substation} from '../models/substationModel.js'
 
 export const getAllSubstations = async (req, res, next) => {
     try {
